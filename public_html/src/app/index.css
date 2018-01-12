@@ -1,0 +1,37 @@
+
+main {
+    font-size: 12px;
+    width: 100%;
+    overflow-style: marquee;
+}    
+.container{
+    width: 100% !important;
+}    
+
+td {
+    min-width: 100px;
+    /*max-width: 250px;*/
+    overflow-x: hidden;
+}
+
+td.retry-cnt {
+    min-width: 15px !important;
+}
+
+td.retry-sts{
+    min-width: 55px;
+}
+
+.ok {
+    color: green;
+}
+.error {
+    color: #fb2925;
+}
+
+.sortorder:after {
+  content: '\25b2';   
+}
+.sortorder.reverse:after {
+  content: '\25bc';   
+}

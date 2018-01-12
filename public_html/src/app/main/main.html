@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-1">
+        <button class="btn btn-success btn-lg btn-block" ng-class="{disabled: main.autorefresh.value && main.autorefresh.value != '0'}" id="refresh" type="button" ng-click="main.refreshStatistics()"> Refresh statistics</button>
+    </div>
+    <div class="col-sm-2" ><label>Automatic refresh: </label> 
+        <select id="refresh-interval" name="refresh-interval" ng-options="item as item.label for item in main.items" ng-model="main.autorefresh" ng-change="main.setRefresh()"></select>
+    </div>
+    <div class="col-sm-2">
+        <label>Show statuses: </label><select ng-options="status as status.name for status in main.status_filter" ng-model="main.filterBy" ng-change="main.getStatistics()"></select>
+    </div>
+    <div class="col-sm-2">
+        <label>Records per page: </label><select ng-options="limit as limit.value for limit in main.limits" ng-model="viewPerPage" ng-change="main.getStatistics()">
+
+     </select>
+    </div>
+</div>
+<hr/>
+<div class="row">
+    <div class="col-sm-12">
+        <button ng-click="predicated = ''; reverse = true">Set to unsorted</button>
+        <br>
+        <table class="table" id="statistics">
+            <thead align="justify" valign="middle">
+                <tr>
+                    <th>
+                        <a href="" ng-click="main.setOrder('email')">User</a>
+                        <span class="sortorder" ng-show="predicated === 'email'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('modified')">Timestamp</a>
+                        <span class="sortorder" ng-show="predicated === 'modified'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('status')">Status</a>
+                        <span class="sortorder" ng-show="predicated === 'status'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('token')">Token</a>
+                        <span class="sortorder" ng-show="predicated === 'token'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('drop_hash')">Drop Hash</a>
+                        <span class="sortorder" ng-show="predicated === 'drop_hash'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('file')">File</a>
+                        <span class="sortorder" ng-show="predicated === 'file'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('file_hash')">File Hash</a>
+                        <span class="sortorder" ng-show="predicated === 'file_hash'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                    <th>
+                        <a href="" ng-click="main.setOrder('queries.length')">Retries</a>
+                        <span class="sortorder" ng-show="predicated === 'queries.length'" ng-class="{reverse: reverse}"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="table-content" align="left" valign="middle">
+                <tr ng-repeat="record in data | orderBy:predicated:reverse | startFrom:(currentPage-1)*viewPerPage.value | limitTo:viewPerPage.value ">
+                    <td ng-bind="record.email"></td>
+                    <td ng-bind="record.modified | date:'d.M.yyyy H:mm:ss'"></td>
+                    <td class="{{record.status}}" ng-bind="record.status"></td>
+                    <td ng-bind="record.token"></td>
+                    <td ng-bind="record.drop_hash"></td>
+                    <td ng-bind="record.file"></td>
+                    <td ng-bind="record.file_hash"></td>
+                    <td>
+                        <table >
+                            <tr ng-repeat="attempt in record.queries" cellpadding="2" cellspasing="1" align="left">
+                                <td class="retry-cnt" ng-bind="attempt.retryCount"></td>
+                                <td class="retry-sts {{attempt.status}}" ng-bind="attempt.status"></td>
+                                <td ng-bind="attempt.description"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="col-sm-12">
+            <a class="badge" href="" ng-repeat="page in pages track by $index" ng-click="main.setPage($index)">{{page}}</a>
+        </div>
+    </div>
+</div>
